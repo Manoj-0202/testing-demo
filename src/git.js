@@ -15,7 +15,6 @@ const Git = ({ testCasesJson }) => {
     return;
   }
 
-  // ✅ Log credentials and data to the console
   console.log("🔐 Git Credentials:");
   console.log("Username:", username);
   console.log("Token:", token);
@@ -30,19 +29,25 @@ const Git = ({ testCasesJson }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-      username,
-      token,
-      repo,
-      branch,
-      testCases: JSON.stringify(testCasesJson),
-      srcPath: "C:\\Users\\rswap\\OneDrive\\Desktop\\react-practice\\reactautomation\\src",
-    }),
+        username,
+        token,
+        repo,
+        branch,
+        testCases: JSON.stringify(testCasesJson),
+        srcPath: "C:\\Users\\rswap\\OneDrive\\Desktop\\react-practice\\reactautomation\\src",
+      }),
     });
 
     const data = await response.json();
     if (response.ok) {
       toast.success(data.message || "✅ Pushed to Git successfully");
       setShowPopup(false);
+
+      // ✅ Clear the input fields
+      setUsername("");
+      setToken("");
+      setRepo("");
+      setBranch("main");
     } else {
       toast.error(data.error || "❌ Git push failed");
     }
@@ -53,6 +58,7 @@ const Git = ({ testCasesJson }) => {
     setPushing(false);
   }
 };
+
 
 
   return (
