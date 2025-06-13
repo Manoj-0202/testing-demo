@@ -9,57 +9,50 @@ const Git = ({ testCasesJson }) => {
   const [repo, setRepo] = useState("");
   const [branch, setBranch] = useState("main");
 
- const handleGitPush = async () => {
-  if (!username || !token || !repo) {
-    toast.error("Please enter all Git details.");
-    return;
-  }
-
-  console.log("🔐 Git Credentials:");
-  console.log("Username:", username);
-  console.log("Token:", token);
-  console.log("Repo:", repo);
-  console.log("Branch:", branch);
-
-  setPushing(true);
-  try {
-    const response = await fetch("http://localhost:8000/git/push-auto", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        token,
-        repo,
-        branch,
-        testCases: JSON.stringify(testCasesJson),
-        srcPath: "C:\\Users\\rswap\\OneDrive\\Desktop\\react-practice\\reactautomation\\src",
-      }),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      toast.success(data.message || "✅ Pushed to Git successfully");
-      setShowPopup(false);
-
-      // ✅ Clear the input fields
-      setUsername("");
-      setToken("");
-      setRepo("");
-      setBranch("main");
-    } else {
-      toast.error(data.error || "❌ Git push failed");
+  const handleGitPush = async () => {
+    if (!username || !token || !repo) {
+      toast.error("🚫 Please enter all Git credentials.");
+      return;
     }
-  } catch (error) {
-    toast.error("❌ Failed to connect to backend");
-    console.error("Git Push Error:", error);
-  } finally {
-    setPushing(false);
-  }
-};
 
+    setPushing(true);
+    try {
+      const response = await fetch("http://localhost:8000/git/push-auto", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          token,
+          repo,
+          branch,
+          testCases: JSON.stringify(testCasesJson),
+          srcPath: "C:\\Users\\rswap\\OneDrive\\Desktop\\react-practice\\reactautomation\\src",
+        }),
+      });
 
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || "✅ Successfully pushed to GitHub!");
+        setShowPopup(false);
+
+        // Clear inputs after successful push
+        setUsername("");
+        setToken("");
+        setRepo("");
+        setBranch("main");
+      } else {
+        toast.error(data.error || "❌ Git push failed.");
+      }
+    } catch (error) {
+      toast.error("❌ Failed to connect to backend.");
+      console.error("Git Push Error:", error);
+    } finally {
+      setPushing(false);
+    }
+  };
 
   return (
     <div style={{ textAlign: "center", paddingTop: "100px" }}>
