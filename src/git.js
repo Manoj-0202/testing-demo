@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const Git = ({ testCasesJson }) => {
   const [pushing, setPushing] = useState(false);
@@ -148,6 +148,7 @@ const Git = ({ testCasesJson }) => {
           </div>
         </div>
       )}
+      <ToastContainer/>
     </div>
   );
 };
